@@ -263,7 +263,7 @@ div#main-image {
 #main-text {
 	columns: 3;
 	column-fill: auto;
-	column-gap: 18 pt;
+	column-gap: 0.375in;
 	padding-top: 10pt;
 	flex: 100%;
 	text-align: justify;

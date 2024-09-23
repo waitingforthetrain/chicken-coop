@@ -67,9 +67,19 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     pdfButton.addEventListener("click", (e) => {
         var page = document.getElementById("page");
+        var flyerNumber = document.getElementById("issue-number").innerHTML;
+        flyerNumber = flyerNumber.replace(/[^a-z0-9\s-]/ig,'')
+          .trim()
+          .replace(/\s+/g, '-')
+          .toLowerCase();
+        var headline = document.getElementById("headline").innerHTML;
+        headline = headline.replace(/[^a-z0-9\s-]/ig,'')
+          .trim()
+          .replace(/\s+/g, '-')
+          .toLowerCase();
         html2pdf(page, {
           margin:       0,
-          filename:     'flyer.pdf',
+          filename:     'flyer-'+flyerNumber+"-"+headline+'.pdf',
           image:        { type: 'jpg', quality: 0.95 },
           html2canvas:  { scale: 3.125, dpi: 300, letterRendering: true, useCORS: true },
           jsPDF:        { unit: 'in', format: 'tabloid', orientation: 'portrait' }
