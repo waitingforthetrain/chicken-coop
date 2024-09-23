@@ -263,12 +263,11 @@ div#main-image {
 #main-text {
 	columns: 3;
 	column-fill: auto;
-	column-gap: 18pt;
+	column-gap: 18 pt;
 	padding-top: 10pt;
 	flex: 100%;
 	text-align: justify;
-	hyphens: auto;
-	padding-bottom: 22pt;
+	padding-bottom: 18pt;
 	overflow: hidden;
 }
 
