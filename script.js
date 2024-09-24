@@ -1,3 +1,5 @@
+var currentFoot = 1;
+
 document.addEventListener('DOMContentLoaded', function() {
     var page = document.getElementById("page");
     var pageWrapper = document.getElementById("page-wrapper");
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var headerButton = document.getElementById("convert-header");
     var pdfButton = document.getElementById("pdf");
     var qrButton = document.getElementById("qr-button");
+    var footButton = document.getElementById("footnote-button");
 
 
     var mainImage = document.getElementById("main-image");
@@ -88,6 +91,9 @@ document.addEventListener('DOMContentLoaded', function() {
     qrButton.addEventListener("click", (e) => {
         makeQR();
     });
+    footButton.addEventListener("click", (e) => {
+        makeFoot();
+    });
 
 }, false);
 
@@ -130,6 +136,76 @@ function surroundSelection(element) {
     }
 }
 
+// Footnotes
+
+function makeFoot() {
+    if (window.getSelection) {
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const node = range.startContainer.parentNode;
+        const parent = document.getElementById("main-text");
+        const childNodes = parent.childNodes;
+
+        let index = -1; // Default to -1 if not found
+        for (let i = 0; i < childNodes.length; i++) {
+            if (childNodes[i] === node) {
+                index = i;
+                break;
+            }
+        }
+
+        var position = getPositionInDocument(range);
+
+        var footnotes = document.getElementsByClassName('footnote-number');
+        var footnoteNumber = footnotes.length;
+
+        // Create a new <sup> element
+        const supElement = document.createElement('sup');
+        supElement.classList.add('footnote-number');
+        supElement.textContent = footnoteNumber+1; // You can insert text here if needed
+
+        // Insert the <sup> element at the cursor position
+        range.insertNode(supElement);
+
+        reorderFootnotes();
+
+        //Create new footnote
+        var footnoteList = document.getElementById('footnote-list');
+        if(!footnoteList){
+            footnoteList = document.createElement('ol');
+            footnoteList.id = "footnote-list"
+            var smallHeader = document.getElementById('small-header');
+            if(!smallHeader){
+                smallHeader = document.createElement('h2');
+                smallHeader.classList.add("small-header");
+                smallHeader.id = "small-header";
+                smallHeader.innerHTML = "Small Header";
+                var qrCodeBox = document.getElementById("qr-codes");
+                if(!qrCodeBox) {
+                    qrCodeBox = document.createElement("div");
+                    qrCodeBox.id = "qr-codes";
+                    var mainText = document.getElementById("main-text");
+                    mainText.append(qrCodeBox);
+                }
+                qrCodeBox.before(smallHeader);
+            }
+            smallHeader.before(footnoteList);
+        }
+        var footnote = document.createElement('li');
+        footnote.classList.add('footnote');
+        footnote.dataset.position = position;
+        footnoteList.append(footnote);
+
+        sortFootnotes();
+
+        // Move the cursor after the new <sup> element
+        range.setStart(footnote, 0); // Set the range to the start of the new <li>
+        range.collapse(true); // Collapse the range so that it’s at the start
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+}
+
 // Convert to QR Code
 
 const isValidUrl = (url) => {
@@ -159,11 +235,73 @@ function makeQR() {
                 });
               qrContainer.insertBefore(qrCaption, qrContainer.firstChild);
               range.deleteContents();
-              var mainText = document.getElementById("qr-codes");
-              mainText.append(qrContainer);
+              var qrCodeBox = document.getElementById("qr-codes");
+              if(!qrCodeBox){
+                qrCodeBox = document.createElement("div");
+                qrCodeBox.id = "qr-codes";
+                var mainText = document.getElementById("main-text");
+                mainText.append(qrCodeBox);
+              }
+              qrCodeBox.append(qrContainer);
             } else {
               alert("The string is not a valid URL.");
             }
+
+            range.setStart(qrCaption, 0); // Set the range to the start of the new <li>
+            range.collapse(true); // Collapse the range so that it’s at the start
+            sel.removeAllRanges();
+            sel.addRange(range);
         }
     }
+}
+
+function reorderFootnotes() {
+    var tempfootnotes = document.getElementsByClassName('footnote-number');
+    tempfootnotes.forEach((e, i) => {
+        e.innerHTML = i+1;
+    });
+}
+
+function sortFootnotes() {
+    const ol = document.getElementById('footnote-list');
+    const tempfootnotes = Array.from(ol.querySelectorAll('li.footnote'));
+
+    // Sort footnotes based on data-position
+    tempfootnotes.sort((a, b) => {
+        const posA = parseInt(a.getAttribute('data-position'), 10);
+        const posB = parseInt(b.getAttribute('data-position'), 10);
+        return posA - posB; // Ascending order
+    });
+
+    // Remove existing footnotes and re-add them in sorted order
+    ol.innerHTML = ''; // Clear existing items
+    tempfootnotes.forEach(footnote => {
+        ol.appendChild(footnote); // Append sorted footnotes back to the list
+    });
+}
+
+function getPositionInDocument(range) {
+    let position = 0;
+    const iterator = document.createNodeIterator(
+        document.body, 
+        NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT
+    );
+
+    let currentNode;
+
+    while ((currentNode = iterator.nextNode())) {
+        // If the current node is the range's start container
+        if (currentNode === range.startContainer) {
+            // Add the length of the text before the selection
+            position += range.startOffset;
+            break;
+        } else {
+            // Add the length of the current node's text
+            position += currentNode.nodeType === Node.TEXT_NODE
+                ? currentNode.length
+                : currentNode.textContent.length;
+        }
+    }
+
+    return position;
 }

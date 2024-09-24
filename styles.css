@@ -1,3 +1,5 @@
+/*https://waitingforthetrain.github.io/chicken-coop/*/
+
 @font-face {
 	font-family: typewritter;
 	src: url(https://waitingforthetrain.github.io/chicken-coop/assets/typewritter.otf);
@@ -83,6 +85,12 @@ input, select,button {
 	background: transparent;
 }
 
+#page-content div, p, li {
+	top: calc(9pt - (1em / 3));
+}
+
+
+
 button:hover {
 	background-color: lightgray;
 }
@@ -128,7 +136,7 @@ button#hidegrid:hover {
 	background-color: initial;
 }
 
-#grid {
+div#grid {
 	position: absolute;
 	left: 0;
 	top: 0;
@@ -167,21 +175,22 @@ button#hidegrid:hover {
 	display: flex;
 	flex-flow: row wrap;
 	width: 100%;
-	font-size: 18pt;
-	padding-bottom: 5pt;
-	padding-top: 4pt;
+	font-size: 24pt;
+	/*padding-bottom: 5pt;
+	padding-top: 4pt;*/
 /*	height: 27pt;*/
 }
 
 .banner.bottom {
 	padding-bottom: 0px;
-	margin-bottom: -3.5pt;
+	padding-top: 8pt;
 	border-top: black 1px solid;
-	padding-top: 11.75pt;
 }
 
 .top {
 	border-bottom: black 1px solid;
+	padding-bottom: 9pt;
+	margin-bottom: -9pt;
 }
 
 .banner * {
@@ -198,8 +207,8 @@ button#hidegrid:hover {
 
 .ellipse {
 	position: absolute;
-	width: 60pt;
-	height: 20pt;
+	width: 70pt;
+	height: 25pt;
 	left: 0;
 	right: 0;
 	top: 0;
@@ -223,10 +232,11 @@ h1 {
     margin-right: 0;
     font-weight: normal;
     font-family: windsor;
-    padding-top: 3pt;
-    padding-bottom: 5.5pt;
+    padding-bottom: 9pt;
+    padding-top: 27pt;
     text-align: center;
     letter-spacing: -0.01em;
+    top: calc((30pt - (1em / 3)));
 }
 
 h1.headline {
@@ -234,20 +244,26 @@ h1.headline {
 }
 h2 {
 	display: block;
-    font-size: 45pt;
-    line-height: 36pt;
+    font-size: 60pt;
+    line-height: 54pt;
     margin-top: 0;
     margin-bottom: 0;
     margin-left: 0;
     margin-right: 0;
     font-weight: normal;
     font-family: windsor;
-    padding-top: 8pt;
-    padding-bottom: 10pt;
     text-align: left;
-    top: 3pt;
     letter-spacing: -.005em;
+    top: calc(15pt - (1em / 3));
 }
+
+/*h2::before {
+	content: "\a";
+    white-space: pre;
+    display: inline-block;
+    height: calc(18pt*3);
+    padding-top: 8pt;
+}*/
 
 /* IMAGE */
 
@@ -260,6 +276,7 @@ div#main-image {
 	background-repeat:   no-repeat;
   	background-position: center center;
   	flex: 0 0 auto;
+  	top: 0;
 }
 
 /* TEXT */
@@ -268,40 +285,57 @@ div#main-image {
 	columns: 3;
 	column-fill: auto;
 	column-gap: 0.375in;
-	padding-top: 10pt;
 	flex: 100%;
 	text-align: justify;
-	padding-bottom: 18pt;
+	padding-bottom: 0;
 	overflow: hidden;
+	padding-top: 27pt;
 }
 
 #main-text > p, #main-text > div{
-	top: 13pt;
+	top: calc(0pt - (1em / 3));
 }
 
-#main-text p:not(:last-child):after {
+/*#main-text p:not(:last-child):after {
 	content: "\a";
     white-space: pre;
     display: block;
     height: 18pt;
+}*/
+
+/* Footnotes */
+
+.footnote-number, #footnote-list {
+	font-family: worksans;
+	font-size: 8pt;
+	line-height: 9pt;
 }
+#footnote-list{
+	margin-left: 12pt;
+	margin-bottom: 18pt;
+}
+
+li.footnote {
+	top: calc(4pt - (1em / 3));
+}
+
 
 /* QR CODES */
 div#qr-codes{
-	top: 0 !important;
+	top: -5pt !important;
 }
-div.qr-container{
+#page-content div.qr-container{
 	display: inline-block;
 	width: calc((100% - 36pt)/3);
-	top: 10pt !important;
+	top: calc(4pt - (1em / 3));
 	margin-right: 18pt;
 }
 
-div.qr-container:nth-child(3n){
+#page-content div.qr-container:nth-child(3n){
 	margin-right: 0;
 }
-div.qr-container:nth-child(n+4){
-	margin-top: 20pt;
+#page-content div.qr-container:nth-child(n+4){
+	margin-top: 12.5pt;
 }
 div.qr-caption{
 	font-family: worksans;
@@ -311,7 +345,7 @@ div.qr-caption{
 	text-decoration: none;
 	color: black;
 	text-align: left;
-	margin-bottom: 7pt;
+	margin-bottom: 14pt;
 	letter-spacing: 0.01em;
 }
 div.qr-container img{

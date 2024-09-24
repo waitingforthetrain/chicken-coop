@@ -4,30 +4,31 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Quick Flyer</title>
-	<link rel="stylesheet" type="text/css" href="styles.css">
+	<link rel="stylesheet" type="text/css" href="https://waitingforthetrain.github.io/chicken-coop/styles.css">
 	<meta name="viewport" content="width=device-width, initial-scale=0.1">
 </head>
 <body>
 	<div id="menu">
-		<label for="zoom">Zoom (%)</label>
-		<input type="text" id="zoom" name="zoom">
-		<label for="basegrid">Basline Grid</label>
+		<label for="basegrid">&#127760; Base Grid</label>
 		<button id="hidegrid" name="hidegrid">
 			Hide
 		</button>
-		<label for="basegrid">Grid Size (pt)</label>
-		<input type="text" id="basegrid" name="basegrid" value="18">
-		<label for="margins">Margins (in)</label>
-		<input type="text" id="margins" name="margins" value="0.375">
-		<label for="image-select">Image</label>
+		<label for="zoom" style="margin-top:0px">&#128269; Zoom (%)</label>
+		<input type="text" id="zoom" name="zoom">
+		<label for="basegrid" style="display:none;">Grid Size (pt)</label>
+		<input type="text" id="basegrid" name="basegrid" value="18" style="display:none;">
+		<label for="margins" style="display:none;">Margins (in)</label>
+		<input type="text" id="margins" name="margins" value="0.375" style="display:none;">
+		<label for="image-select">&#128248; Image</label>
 		<input type="file" id="image-select" name="image-select">
-		<label for="image-size">Image Size</label>
+		<label for="image-size">&#128444; Image Size</label>
 		<input type="range" id="image-size" name="image-size" class="slider" min="15" max="35" value="25">
 		<!-- <label for="image-contrast">Image Contrast</label>
 		<input type="range" id="image-contrast" name="image-contrast" class="slider" min="0.25" max="1.75" value="1" step=".05">
 		<label for="image-contrast">Image Brightness</label> -->
 		<!-- <input type="range" id="image-brightness" name="image-brightness" class="slider" min="0.25" max="1.75" value="1" step=".05"> -->
 		<button id="convert-header" style="display: none">&#128288; Toggle Header</button>
+		<button id="footnote-button">&#128221; Insert Footnote</button>
 		<button id="qr-button">&#127937; Make QR Code</button>
 		<button id="pdf">&#128229; Download PDF</button>
 	</div>
@@ -65,26 +66,25 @@
 				<!-- Text Body -->
 				<main id="main-text" contenteditable="true">
 					<p>Lorem ipsum odor amet, consectetuer adipiscing elit. Platea dolor venenatis enim convallis vitae dapibus. Vulputate mollis mi cubilia lectus ipsum et risus. Penatibus parturient torquent auctor ligula integer; potenti viverra. Potenti sodales erat ipsum cubilia scelerisque.</p>
+					<p></br></p>
+					<p>Magna massa potenti phasellus praesent nisl efficitur congue facilisi at. Finibus arcu tellus dolor varius euismod. Mattis ultrices quisque adipiscing dis, semper a ultricies orci nunc. Acongue habitant faucibus ligula, ad non. Pharetra magnis dis nam elementum libero; magna magnis ac blandit.</p>
 
-					<p>Magna massa potenti phasellus praesent nisl efficitur congue facilisi at. Finibus arcu tellus dolor varius euismod. Mattis ultrices quisque adipiscing dis, semper a ultricies orci nunc. Acongue habitant faucibus ligula, ad non. Pharetra magnis dis nam elementum libero; magna magnis ac blandit. Feugiat ridiculus vivamus inceptos lobortis magna libero. Maecenas fermentum auctor tempus orci aptent ex egestas habitasse tempor.</p>
+					<!-- FOOTNOTES -->
 
-					<p>Viverra justo habitant, sapien ridiculus lorem rutrum. Donec eros massa sed nam aliquam dictum integer finibus. Quisque netus porttitor; praesent ultricies egestas cursus. Adipiscing torquent sollicitudin tempus massa nulla id netus. Enim montes etiam porttitor sit congue lacus himenaeos quam curabitur. Dolor maecenas placerat iaculis aenean bibendum tincidunt.</p>
+					<ol id="footnote-list"></ol>
 
-					<h2 class="small-header">Put a smaller header here. It can be 2-4 lines!</h2>
+					<h2 class="small-header" id="small-header">Put a smaller header here. It can be 2-4 lines!</h2>
+
+					<!-- QR CODES -->
+
 					<div id="qr-codes"></div>
 				</main>
 
 				<!-- Footer -->
 
 				<footer class="banner bottom">
-					<div class="date" contenteditable="true">
-						Slogan
-					</div>
 					<div class="issue-number" contenteditable="true" style="flex: 2">
-						Slogan
-					</div>
-					<div class="place" contenteditable="true">
-						Slogan
+						One Longer Slogan At The Bottom
 					</div>
 				</footer>
 			</div>
@@ -92,6 +92,6 @@
 	</div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
-	<script type="text/javascript" src="script.js"></script>
+	<script type="text/javascript" src="https://waitingforthetrain.github.io/chicken-coop/script.js"></script>
 </body>
 </html>
