@@ -20,8 +20,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var qrButton = document.getElementById("qr-button");
     var footButton = document.getElementById("footnote-button");
 
-
     var mainImage = document.getElementById("main-image");
+
+    var issueNumber = document.getElementById("issue-number");
+    issueNumber.addEventListener("change", (e) => {
+        document.title = "Flyer "+e.target.value;
+    });
 
     zoomInput.value = Math.round(resizeRatio*100);
 
@@ -70,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     pdfButton.addEventListener("click", (e) => {
         var page = document.getElementById("page");
-        var flyerNumber = document.getElementById("issue-number").innerHTML;
+        var flyerNumber = document.getElementById("issue-number").value;
         flyerNumber = flyerNumber.replace(/[^a-z0-9\s-]/ig,'')
           .trim()
           .replace(/\s+/g, '-')

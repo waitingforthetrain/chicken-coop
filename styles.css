@@ -201,6 +201,19 @@ div#grid {
 	text-align: center;
 	flex: 1;
 }
+input#issue-number{
+	width: 100px;
+	border: 0;
+    border-radius: 0;
+    font-size: inherit;
+    font-family: inherit;
+    line-height: inherit;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    top: inherit;
+    height: 18pt;
+}
 .place {
 	text-align: right;
 }
