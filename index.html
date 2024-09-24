@@ -31,6 +31,9 @@
 		<button id="footnote-button">&#128221; Insert Footnote</button>
 		<button id="qr-button">&#127937; Make QR Code</button>
 		<button id="pdf">&#128229; Download PDF</button>
+		<button id="save-content" onclick="saveContent()">&#128190; Save Content</button>
+	    <label for="file-input">&#128194; Load Content</label>
+	    <input type="file" id="file-input" accept=".html" onchange="loadContent(event)" />
 	</div>
 	<div id="page-wrapper">
 		<div id="page">

@@ -309,3 +309,26 @@ function getPositionInDocument(range) {
 
     return position;
 }
+
+function saveContent() {
+    const content = document.getElementById('page-content').innerHTML;
+    const blob = new Blob([content], { type: 'text/html' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'page-content.html';
+    link.click();
+    URL.revokeObjectURL(link.href); // Clean up
+}
+
+// Function to load content from a file into the div
+function loadContent(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const content = e.target.result;
+        document.getElementById('page-content').innerHTML = content;
+    };
+    reader.readAsText(file);
+}
