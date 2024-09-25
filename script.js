@@ -21,10 +21,12 @@ document.addEventListener('DOMContentLoaded', function() {
     var footButton = document.getElementById("footnote-button");
 
     var mainImage = document.getElementById("main-image");
-
-    var issueNumber = document.getElementById("issue-number");
-    issueNumber.addEventListener("change", (e) => {
+    var issueNumber;
+    var headline;
+    var issueNumberField = document.getElementById("issue-number");
+    issueNumberField.addEventListener("change", (e) => {
         document.title = "Flyer "+e.target.value;
+        issueNumberField.defaultValue = e.target.value;
     });
 
     zoomInput.value = Math.round(resizeRatio*100);
@@ -45,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
         reZoom(pageWrapper, e.target.value);
     });
     showHide.addEventListener("click", (e) => {
+        grid = document.getElementById("grid");
         showHide.classList.toggle("hide");
         if (showHide.classList.contains("hide")) {
             grid.style.display = "none";
@@ -54,11 +57,12 @@ document.addEventListener('DOMContentLoaded', function() {
             showHide.innerHTML = "Hide";
         }
     });
-    imageSelect.addEventListener("change", (e) => {
-        var img = imageSelect.files[0];
-        mainImage.style.backgroundImage = 'url("'+URL.createObjectURL(img)+'")';
-    });
+    // imageSelect.addEventListener("change", (e) => {
+    //     var img = imageSelect.files[0];
+    //     mainImage.style.backgroundImage = 'url("'+URL.createObjectURL(img)+'")';
+    // });
     imageSize.addEventListener("change", (e) => {
+        mainImage = document.getElementById("main-image");
         imgHeight(mainImage, e.target.value, gridInput.value);
     });
     // imageBrightness.addEventListener("change", (e) => {
@@ -73,24 +77,27 @@ document.addEventListener('DOMContentLoaded', function() {
         surroundSelection(newH);
     });
     pdfButton.addEventListener("click", (e) => {
-        var page = document.getElementById("page");
-        var flyerNumber = document.getElementById("issue-number").value;
-        flyerNumber = flyerNumber.replace(/[^a-z0-9\s-]/ig,'')
-          .trim()
-          .replace(/\s+/g, '-')
-          .toLowerCase();
-        var headline = document.getElementById("headline").innerHTML;
+        issueNumberField = document.getElementById("issue-number");
+        issueNumber = issueNumberField.value;
+        headline = document.getElementById("headline").innerHTML;
         headline = headline.replace(/[^a-z0-9\s-]/ig,'')
           .trim()
           .replace(/\s+/g, '-')
           .toLowerCase();
+
+        issueNumberField.removeAttribute("id");
+
+        var page = document.getElementById("page");
         html2pdf(page, {
           margin:       0,
-          filename:     'flyer-'+flyerNumber+"-"+headline+'.pdf',
+          filename:     'flyer-'+issueNumber+"-"+headline+'.pdf',
           image:        { type: 'jpg', quality: 0.95 },
           html2canvas:  { scale: 3.125, dpi: 300, letterRendering: true, useCORS: true },
           jsPDF:        { unit: 'in', format: 'tabloid', orientation: 'portrait' }
-        });
+        }).then(() => {
+        // Once PDF generation is complete, add the ID back
+        issueNumberField.setAttribute("id", "issue-number");
+    });
     });
     qrButton.addEventListener("click", (e) => {
         makeQR();
@@ -310,12 +317,25 @@ function getPositionInDocument(range) {
     return position;
 }
 
+function fullLoad(event) {
+    loadContent(event).then(function(e) {
+        issueNumberField = document.getElementById("issue-number");
+        fixImage();
+    });
+}
+
 function saveContent() {
     const content = document.getElementById('page-content').innerHTML;
     const blob = new Blob([content], { type: 'text/html' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'page-content.html';
+    issueNumber = document.getElementById("issue-number").value;
+    var head = document.getElementById("headline").innerHTML;
+    head = head.replace(/[^a-z0-9\s-]/ig,'')
+          .trim()
+          .replace(/\s+/g, '-')
+          .toLowerCase();
+    link.download = 'Flyer-'+issueNumber+'-'+head+'.html';
     link.click();
     URL.revokeObjectURL(link.href); // Clean up
 }
@@ -328,7 +348,83 @@ function loadContent(event) {
     const reader = new FileReader();
     reader.onload = function(e) {
         const content = e.target.result;
+
+        // Set the inner HTML of the page content
+        document.getElementById('page-content').innerHTML = '';
         document.getElementById('page-content').innerHTML = content;
+
+        fixImage();
+        issueNumberField = document.getElementById("issue-number");
+        issueNumberField.addEventListener("change", (e) => {
+            document.title = "Flyer "+e.target.value;
+            issueNumberField.defaultValue = e.target.value;
+        });
+
+        const fileNameWithoutExtension = file.name.split('.').slice(0, -1).join('.');
+        document.title = fileNameWithoutExtension;
     };
     reader.readAsText(file);
+}
+
+function addBackgroundImage(event) {
+    const imgFile = event.target.files[0];
+    if (!imgFile) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const base64Image = e.target.result;  // Store the base64 string
+
+        // Store the base64 data in the `data-base64` attribute
+        document.getElementById('main-image').setAttribute('data-base64', base64Image);
+
+        // Create a temporary object URL for the image to display in the browser
+        const imgURL = URL.createObjectURL(imgFile);
+        document.getElementById('main-image').style.backgroundImage = `url('${imgURL}')`;
+    };
+    reader.readAsDataURL(imgFile);  // Read the file as Base64
+}
+
+function base64ToURL(base64) {
+    try {
+        // Log the incoming base64 string
+        console.log("Base64 String: ", base64);
+
+        // Decode Base64 data
+        const byteString = atob(base64.split(',')[1]);
+        const mimeString = base64.split(',')[0].split(':')[1].split(';')[0];
+
+        console.log("Decoded Byte String: ", byteString);
+        console.log("MIME Type: ", mimeString);
+
+        // Create an ArrayBuffer from the byte string
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+        }
+
+        console.log("ArrayBuffer created: ", ab);
+
+        // Create a Blob from the ArrayBuffer
+        const blob = new Blob([ab], { type: mimeString });
+        console.log("Blob created: ", blob);
+
+        // Create and return an Object URL
+        const url = URL.createObjectURL(blob);
+        console.log("Object URL created: ", url);
+
+        return url;
+    } catch (error) {
+        console.error("Error during Base64 to URL conversion: ", error);
+        return null;
+    }
+}
+
+function fixImage() {
+    var main = document.getElementById("main-image");
+    var base64 = main.dataset.base64;
+    if(base64) {
+        var imgURL = base64ToURL(base64);
+        main.style.backgroundImage = `url('${imgURL}')`;
+    }
 }

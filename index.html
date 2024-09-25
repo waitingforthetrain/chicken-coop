@@ -20,7 +20,7 @@
 		<label for="margins" style="display:none;">Margins (in)</label>
 		<input type="text" id="margins" name="margins" value="0.375" style="display:none;">
 		<label for="image-select">&#128248; Image</label>
-		<input type="file" id="image-select" name="image-select">
+		<input type="file" id="image-select" name="image-select" accept="image/*" onchange="addBackgroundImage(event)" />
 		<label for="image-size">&#128444; Image Size</label>
 		<input type="range" id="image-size" name="image-size" class="slider" min="15" max="35" value="25">
 		<!-- <label for="image-contrast">Image Contrast</label>
@@ -49,7 +49,7 @@
 					</div>
 					<div class="issue-number">
 						<div class="ellipse"></div>
-						<input type="text" name="issue-number" id="issue-number" contenteditable="true" value="1">
+						<input type="text" name="issue-number" id="issue-number" class="issue" value="1">
 					</div>
 					<div class="place" contenteditable="true">
 						New York, NY
