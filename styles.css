@@ -299,7 +299,7 @@ div#main-image {
 	column-fill: auto;
 	column-gap: 0.375in;
 	flex: 100%;
-	text-align: justify;
+	text-align: left;
 	padding-bottom: 0;
 	overflow: hidden;
 	padding-top: 27pt;
