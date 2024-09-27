@@ -153,67 +153,72 @@ function makeFoot() {
     if (window.getSelection) {
         const selection = window.getSelection();
         const range = selection.getRangeAt(0);
-        const node = range.startContainer.parentNode;
         const parent = document.getElementById("main-text");
-        const childNodes = parent.childNodes;
+        if(isSelectionInDiv(range, parent)){
+            const node = range.startContainer.parentNode;
+            const childNodes = parent.childNodes;
 
-        let index = -1; // Default to -1 if not found
-        for (let i = 0; i < childNodes.length; i++) {
-            if (childNodes[i] === node) {
-                index = i;
-                break;
-            }
-        }
-
-        var position = getPositionInDocument(range);
-
-        var footnotes = document.getElementsByClassName('footnote-number');
-        var footnoteNumber = footnotes.length;
-
-        // Create a new <sup> element
-        const supElement = document.createElement('sup');
-        supElement.classList.add('footnote-number');
-        supElement.textContent = footnoteNumber+1; // You can insert text here if needed
-
-        // Insert the <sup> element at the cursor position
-        range.insertNode(supElement);
-
-        reorderFootnotes();
-
-        //Create new footnote
-        var footnoteList = document.getElementById('footnote-list');
-        if(!footnoteList){
-            footnoteList = document.createElement('ol');
-            footnoteList.id = "footnote-list"
-            var smallHeader = document.getElementById('small-header');
-            if(!smallHeader){
-                smallHeader = document.createElement('h2');
-                smallHeader.classList.add("small-header");
-                smallHeader.id = "small-header";
-                smallHeader.innerHTML = "Small Header";
-                var qrCodeBox = document.getElementById("qr-codes");
-                if(!qrCodeBox) {
-                    qrCodeBox = document.createElement("div");
-                    qrCodeBox.id = "qr-codes";
-                    var mainText = document.getElementById("main-text");
-                    mainText.append(qrCodeBox);
+            let index = -1; // Default to -1 if not found
+            for (let i = 0; i < childNodes.length; i++) {
+                if (childNodes[i] === node) {
+                    index = i;
+                    break;
                 }
-                qrCodeBox.before(smallHeader);
             }
-            smallHeader.before(footnoteList);
+
+            var position = getPositionInDocument(range);
+
+            var footnotes = document.getElementsByClassName('footnote-number');
+            var footnoteNumber = footnotes.length;
+
+            // Create a new <sup> element
+            const supElement = document.createElement('sup');
+            supElement.classList.add('footnote-number');
+            supElement.textContent = footnoteNumber+1; // You can insert text here if needed
+
+            // Insert the <sup> element at the cursor position
+            range.collapse(false);
+            range.insertNode(supElement);
+
+            reorderFootnotes();
+
+            //Create new footnote
+            var footnoteList = document.getElementById('footnote-list');
+            if(!footnoteList){
+                footnoteList = document.createElement('ol');
+                footnoteList.id = "footnote-list"
+                var smallHeader = document.getElementById('small-header');
+                if(!smallHeader){
+                    smallHeader = document.createElement('h2');
+                    smallHeader.classList.add("small-header");
+                    smallHeader.id = "small-header";
+                    smallHeader.innerHTML = "Small Header";
+                    var qrCodeBox = document.getElementById("qr-codes");
+                    if(!qrCodeBox) {
+                        qrCodeBox = document.createElement("div");
+                        qrCodeBox.id = "qr-codes";
+                        var mainText = document.getElementById("main-text");
+                        mainText.append(qrCodeBox);
+                    }
+                    qrCodeBox.before(smallHeader);
+                }
+                smallHeader.before(footnoteList);
+            }
+            var footnote = document.createElement('li');
+            footnote.classList.add('footnote');
+            footnote.dataset.position = position;
+            footnoteList.append(footnote);
+
+            sortFootnotes();
+
+            // Move the cursor after the new <sup> element
+            range.setStart(footnote, 0); // Set the range to the start of the new <li>
+            range.collapse(true); // Collapse the range so that it’s at the start
+            selection.removeAllRanges();
+            selection.addRange(range);
+        } else {
+            alert("Footnotes can only be added to the main body of the text.")
         }
-        var footnote = document.createElement('li');
-        footnote.classList.add('footnote');
-        footnote.dataset.position = position;
-        footnoteList.append(footnote);
-
-        sortFootnotes();
-
-        // Move the cursor after the new <sup> element
-        range.setStart(footnote, 0); // Set the range to the start of the new <li>
-        range.collapse(true); // Collapse the range so that it’s at the start
-        selection.removeAllRanges();
-        selection.addRange(range);
     }
 }
 
@@ -275,6 +280,7 @@ function reorderFootnotes() {
 
 function sortFootnotes() {
     const ol = document.getElementById('footnote-list');
+    const photoCredit = document.getElementById('photo-credit');
     const tempfootnotes = Array.from(ol.querySelectorAll('li.footnote'));
 
     // Sort footnotes based on data-position
@@ -289,6 +295,7 @@ function sortFootnotes() {
     tempfootnotes.forEach(footnote => {
         ol.appendChild(footnote); // Append sorted footnotes back to the list
     });
+    ol.appendChild(photoCredit);
 }
 
 function getPositionInDocument(range) {
@@ -427,4 +434,9 @@ function fixImage() {
         var imgURL = base64ToURL(base64);
         main.style.backgroundImage = `url('${imgURL}')`;
     }
+}
+
+function isSelectionInDiv(range, div) {
+  // Check if the start and end of the range are within the div
+  return div.contains(range.startContainer) && div.contains(range.endContainer);
 }

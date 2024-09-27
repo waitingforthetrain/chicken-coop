@@ -335,7 +335,13 @@ div#main-image {
 	margin-bottom: 18pt;
 }
 
-li.footnote {
+#footnote-list li#photo-credit {
+	list-style: none;
+	list-style-type: none;
+	margin-left: -12pt;
+} 
+
+#footnote-list li {
 	transform: translateY(calc(4pt - (1em / 3)));
 }
 
