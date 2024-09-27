@@ -336,7 +336,7 @@ div#main-image {
 }
 
 li.footnote {
-	top: calc(4pt - (1em / 3));
+	transform: translateY(calc(4pt - (1em / 3)));
 }
 
 
