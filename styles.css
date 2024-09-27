@@ -219,7 +219,7 @@ input.issue{
 	text-align: right;
 }
 
-div#ellipse {
+div#ellipse, div.issue-number div.ellipse {
 	position: absolute;
 	width: 70pt;
 	height: 25pt;
